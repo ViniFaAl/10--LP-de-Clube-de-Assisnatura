@@ -1,0 +1,190 @@
+.kit-mensal {
+  width: 100%;
+  overflow-x: clip;
+  padding-bottom: 4rem;
+
+  & .kit-title {
+    width: 19.43rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-inline: auto;
+    padding-block: 4rem;
+
+    & h3 {
+      display: flex;
+      align-items: center;
+      color: var(--text-title);
+      font: var(--title-xs);
+
+      & img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    & span {
+      color: var(--text-body);
+      font: 400 10px/1.4 var(--ff-base);
+    }
+  }
+
+  & .kit-stage {
+    --u: min(1.1rem, 2.9vw); /* unidade da composição: tudo é múltiplo dela */
+    --crop: 7.5; /* corta a área vazia da esquerda */
+    position: relative;
+    width: calc(33 * var(--u));
+    height: calc(29 * var(--u));
+    margin-inline: auto;
+    view-timeline: --stage block;
+
+    /* posição: livro, marca-páginas, broche, linhas e textos */
+    & .item,
+    & .linha,
+    & .texto {
+      position: absolute;
+      left: calc((var(--l) - var(--crop)) * var(--u));
+      top: calc(var(--t) * var(--u));
+      margin: 0;
+    }
+
+    /* largura: imagens e linhas */
+    & .item,
+    & .linha {
+      width: calc(var(--w) * var(--u));
+      height: auto;
+    }
+
+    /* --- livro na frente de tudo --- */
+    & .livro { --l: 16.4; --t: 4.5; --w: 12.8; z-index: 4; cursor: pointer; }
+
+    /* --- objetos: --dx/--dy = quanto andam para ficar atrás do livro --- */
+    & .marca--roxo { --l: 32.5; --t: 4.3; --w: 6.4; --dx: -12.9; --dy: -0.3; rotate: 15deg; z-index: 3; }
+    & .marca--ouro { --l: 28.6; --t: 1.4; --w: 5.9; --dx: -8.8; --dy: 2.3; rotate: 8deg; z-index: 2; }
+    & .broche { --l: 11.2; --t: 17.8; --w: 4.8; --dx: 9.2; --dy: -7.4; z-index: 3; }
+
+    /* --- linhas e textos (atrás do livro) --- */
+    & .linha--livro { --l: 10; --t: 3; --w: 6.5; --dx: 9.5; --dy: 9.5; z-index: 1; }
+    & .linha--broche { --l: 9.2; --t: 15.3; --w: 3; --dx: 12.1; --dy: -3.7; z-index: 1; }
+    & .linha--marca { --l: 30.9; --t: 21.5; --w: 4.8; --dx: -10.5; --dy: -10.2; z-index: 1; }
+
+    & .texto {
+      z-index: 1;
+      white-space: nowrap;
+      color: var(--text-body);
+      font: 400 max(9px, calc(var(--u) * 0.75)) / 1.4 var(--ff-base);
+    }
+    & .texto--livro { --l: 8; --t: 2; --dx: 12; --dy: 10; }
+    & .texto--broche { --l: 8.6; --t: 14.2; --dx: 13; --dy: -1; }
+    & .texto--marca { --l: 28; --t: 27; --dx: -8.2; --dy: -14.2; }
+  }
+}
+
+@media (width >= 80em) {
+  .kit-mensal {
+    & .kit-title {
+      width: 41rem;
+      padding-block: 3rem;
+
+      & h3 { font: var(--title-sm); }
+      & span { font: var(--body-sm); }
+    }
+
+    & .kit-stage {
+      --u: clamp(1.25rem, 2vw, 1.75rem); /* desktop maior */
+    }
+  }
+}
+
+/* ===== COM MOUSE: escondido atrás do livro, aparece no hover ===== */
+@media (hover: hover) {
+  .kit-mensal .kit-stage {
+    & .marca,
+    & .broche,
+    & .linha,
+    & .texto {
+      opacity: 0;
+      translate: calc(var(--dx) * var(--u)) calc(var(--dy) * var(--u));
+      scale: 0.8;
+      pointer-events: none;
+    }
+
+    &:has(.livro:is(:hover, :focus-visible)) {
+      & .marca,
+      & .broche,
+      & .linha,
+      & .texto {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+      }
+    }
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .kit-mensal .kit-stage {
+    /* saída: tudo volta rápido para trás do livro */
+    & .marca,
+    & .broche,
+    & .linha,
+    & .texto {
+      transition:
+        opacity 0.4s ease-out,
+        translate 0.4s ease-in,
+        scale 0.4s ease-in;
+    }
+
+    /* entrada: cada grupo sai um pouco depois do outro */
+    &:has(.livro:is(:hover, :focus-visible)) {
+      & .marca,
+      & .broche,
+      & .linha,
+      & .texto {
+        transition:
+          opacity 0.5s ease-out var(--delay, 0s),
+          translate 0.7s cubic-bezier(0.2, 0.9, 0.2, 1.1) var(--delay, 0s),
+          scale 0.7s cubic-bezier(0.2, 0.9, 0.2, 1.1) var(--delay, 0s);
+      }
+
+      & .marca--ouro { --delay: 0.05s; }
+      & .marca--roxo { --delay: 0.15s; }
+      & .broche { --delay: 0.1s; }
+      & .linha { --delay: 0.4s; }
+      & .texto { --delay: 0.5s; }
+    }
+  }
+}
+
+/* ===== SEM MOUSE (celular/tablet): animação por scroll ===== */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .kit-mensal .kit-stage {
+      & .item,
+      & .linha,
+      & .texto {
+        animation-timing-function: ease-out;
+        animation-fill-mode: both;
+        animation-timeline: --stage;
+      }
+
+      & .livro { animation-name: livro-entra; animation-range: entry 0% entry 60%; }
+      & .marca,
+      & .broche { animation-name: sai-de-tras; animation-range: entry 30% entry 100%; }
+      & .linha { animation-name: sai-de-tras; animation-range: entry 70% cover 30%; }
+      & .texto { animation-name: sai-de-tras; animation-range: entry 100% cover 35%; }
+    }
+  }
+}
+
+@keyframes livro-entra {
+  from { opacity: 0; translate: 0 calc(2 * var(--u)); }
+}
+
+@keyframes sai-de-tras {
+  from {
+    opacity: 0;
+    translate: calc(var(--dx) * var(--u)) calc(var(--dy) * var(--u));
+    scale: 0.8;
+  }
+}

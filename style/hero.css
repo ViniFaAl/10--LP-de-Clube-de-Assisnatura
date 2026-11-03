@@ -1,0 +1,227 @@
+/*background*/
+.hero {
+  text-align: center;
+
+  & .bg-image {
+    height: 29rem;
+    background-image: url(../assets/images/hero.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    /*Animation*/
+    opacity: 0;
+    animation: aparecer 2s ease 700ms forwards;
+  }
+
+  /*Nav bar*/
+  & nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    & > img {
+      width: 4rem;
+      height: 3rem;
+    }
+
+    & a {
+      font: var(--button);
+      background-color: var(--pink-dark);
+      color: var(--text-title);
+      border-radius: 8px;
+      padding: 8px 20px;
+    }
+
+    & a:hover {
+      background-color: var(--pink-base);
+    }
+  }
+
+  /*title*/
+  & .title {
+    margin-inline: auto;
+    text-align: center;
+    width: 20.93rem;
+
+    & h1 {
+      font: var(--title-lg);
+      color: var(--text-title);
+      padding-bottom: 1rem;
+    }
+
+    & span {
+      font: var(--body-lg);
+      color: var(--text-body);
+    }
+  }
+
+  /*Sub hero*/
+  & .sub-hero {
+    width: 20rem;
+    margin-inline: auto;
+    padding-block: 5rem;
+
+    & img {
+      width: 50px;
+      object-fit: cover;
+      opacity: 0;
+      animation: aparecer-loop 3s ease infinite;
+    }
+    /* livro */
+    & > img {
+      animation-delay: 800ms;
+    }
+
+    /* ouija */
+    & .images img:first-child {
+      animation-delay: 1s;
+    }
+
+    /* bola */
+    & .images img:last-child {
+      animation-delay: 1.2s;
+    }
+
+    & .images {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+
+      & img:first-child {
+        transform: rotate(250deg);
+        position: absolute;
+        top: -10px;
+      }
+
+      & img:last-child {
+        position: absolute;
+        left: 280px;
+      }
+    }
+
+    & h2 {
+      font: var(--subtitle);
+      color: var(--text-body);
+
+      & .blue {
+        color: var(--blue-light);
+        animation: cor-loop 3s ease infinite;
+      }
+
+      /* livro surpresa, junto com o livro */
+      & .blue:nth-of-type(1) {
+        animation-delay: 800ms;
+      }
+
+      /* brindes exclusivos, junto com a ouija */
+      & .blue:nth-of-type(2) {
+        animation-delay: 1s;
+      }
+
+      /* encantadora, junto com a bola */
+      & .blue:nth-of-type(3) {
+        animation-delay: 1.2s;
+      }
+    }
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes aparecer-loop {
+  0% {
+    opacity: 0;
+  }
+  20%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cor-loop {
+  0% {
+    color: var(--text-body);
+  }
+  20%,
+  70% {
+    color: var(--blue-light);
+  }
+  100% {
+    color: var(--text-body);
+  }
+}
+
+@media (width >= 80em) {
+  .hero {
+    text-align: center;
+
+    & .bg-image {
+      height: 59.25rem;
+    }
+
+    /*Nav bar*/
+    & nav {
+      padding-inline: 6rem;
+      padding-block: 4rem;
+      margin-bottom: 4rem;
+
+      & img:nth-child(1) {
+        width: 230px;
+      }
+
+      & img:nth-child(2) {
+        display: none;
+      }
+    }
+
+    /*Title*/
+    & .title {
+      width: 41rem;
+
+      & h1 {
+        padding-bottom: 2rem;
+      }
+
+      & span {
+        width: 35.5rem;
+        padding: 1rem;
+      }
+    }
+
+    /*Sub hero*/
+    & .sub-hero {
+      width: 71rem;
+      margin-top: 3rem;
+      text-align: center;
+
+      & img {
+        width: 80px;
+        object-fit: cover;
+      }
+
+      & .images {
+        & img:first-child {
+          transform: rotate(0deg);
+        }
+
+        & img:last-child {
+          position: absolute;
+          left: 1080px;
+        }
+      }
+    }
+  }
+}
